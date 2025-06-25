@@ -39,7 +39,7 @@ model User {
 model Workspace {
   id          Int      @id @default(autoincrement())
   name        String
-  shortName   String
+  shortName   String?
   website     String?
   description String?
   boards      Board[]

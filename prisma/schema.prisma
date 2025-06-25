@@ -17,9 +17,17 @@ generator client {
 model Visibility {
   id        Int      @id @default(autoincrement())
   name      String
+  boards    Board[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Board     Board[]
+}
+
+model Status {
+  id        Int      @id @default(autoincrement())
+  name      String
+  tasks     Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
@@ -55,10 +63,10 @@ model Board {
   background_color String?
   pipes            Pipe[]
   visibilityId     Int
-  visibility       Visibility @relation(fields: [visibilityId], references: [id])
   workspaceId      Int
-  workspace        Workspace  @relation(fields: [workspaceId], references: [id])
   userId           Int
+  visibility       Visibility @relation(fields: [visibilityId], references: [id])
+  workspace        Workspace  @relation(fields: [workspaceId], references: [id])
   user             User       @relation(fields: [userId], references: [id])
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
@@ -69,8 +77,8 @@ model Pipe {
   name      String
   tasks     Task[]
   boardId   Int
-  board     Board    @relation(fields: [boardId], references: [id])
   userId    Int
+  board     Board    @relation(fields: [boardId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -82,9 +90,11 @@ model Task {
   description String
   activities  Activity[]
   pipeId      Int
-  pipe        Pipe       @relation(fields: [pipeId], references: [id])
   userId      Int?
+  statusId    Int
+  pipe        Pipe       @relation(fields: [pipeId], references: [id])
   User        User?      @relation(fields: [userId], references: [id])
+  Status      Status     @relation(fields: [statusId], references: [id])
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -93,8 +103,8 @@ model Activity {
   id        Int      @id @default(autoincrement())
   content   String
   taskId    Int
-  task      Task     @relation(fields: [taskId], references: [id])
   userId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
